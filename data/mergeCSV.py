@@ -1,4 +1,4 @@
-"""
+
 import csv
 from datetime import datetime
 
@@ -33,9 +33,9 @@ with open(input_filename, 'r') as infile:
                 writer.writerow(new_row)
 
 print(f"File '{input_filename}' was modified to '{output_filename}' with merged names.")
-"""
 
-"""
+
+
 import pandas as pd
 
 # Load the CSV files into dataframes
@@ -49,7 +49,7 @@ filtered_df = merged_df[merged_df['SeasonType'] == 1.0]
 # Save the merged dataframe to a new CSV file
 filtered_df.to_csv('Player.2022_merged.csv', index=False)
 
-"""
+
 
 
 
