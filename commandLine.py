@@ -18,22 +18,47 @@ def get_player_data(input_name, players):
             return player
     return None
 
-def calculate(player_data):
-    # Implement your calculation logic here
-    pass
+def find_similar_players(player_data, players):
+    total_pts = float(player_data['Total_Pts'])
+    prediction = float(player_data['Predictions'])
+
+    similar_players = []
+    for player in players:
+        player_total_pts = float(player['Total_Pts'])
+        player_prediction = float(player['Predictions'])
+
+        if total_pts - 40 <= player_total_pts <= total_pts + 40 and player_prediction > prediction:
+            similar_players.append(player)
+
+    # Sort by 'Predictions' in descending order and limit to top 10
+    similar_players_sorted = sorted(similar_players, key=lambda x: float(x['Predictions']), reverse=True)[:10]
+
+    return [player['Name'] for player in similar_players_sorted]
+
+def calculate(player_data, players):
+    similar_players = find_similar_players(player_data, players)
+    if similar_players:
+        print("Top 10 players with higher predictions within a 40 point range:")
+        for name in similar_players:
+            print(name)
+    else:
+        print("No similar players found.")
 
 def main():
-    players = read_csv('data/Player_2022.cleaned.csv')
+    players = read_csv('data/predictions.csv')
     while True:
         player_name = input("Enter NFL player name: ")
         player_data = get_player_data(player_name, players)
 
         if player_data:
-            calculate(player_data)
+            calculate(player_data, players)
             break
         else:
             closest_name = find_closest_name(player_name, players)
-            print(f"Player not found. Did you mean: {closest_name}? Try again.")
+            if closest_name:
+                print(f"Player not found. Did you mean: {closest_name}? Try again.")
+            else:
+                print("Player not found. Try again.")
 
 if __name__ == "__main__":
     main()
