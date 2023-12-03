@@ -1,4 +1,4 @@
-
+"""
 import csv
 from datetime import datetime
 
@@ -88,3 +88,50 @@ print(f"Filtered columns saved to '{output_filename}'")
 
 
 
+import pandas as pd
+
+def transform_position_column(csv_file_path, output_file_path):
+
+    # Load the CSV file
+    data = pd.read_csv(csv_file_path)
+
+    # Define the mapping for the 'Position' column
+    position_mapping = {'QB': 1.0, 'RB': 2.0, 'WR': 3.0, 'TE': 4.0}
+
+    # Apply the transformation
+    data['Pos'] = data['Pos'].map(position_mapping)
+
+    # Save the modified DataFrame to a new CSV file
+    data.to_csv(output_file_path, index=False)
+
+    print(f"File saved successfully to {output_file_path}")
+
+# Example usage
+input_csv_file = 'Player_2022_cleaned_copy.csv'  # Replace with your input CSV file path
+output_csv_file = 'Player_2022_cleaned_copy.csv'  # Replace with your desired output file name
+
+transform_position_column(input_csv_file, output_csv_file)
+
+
+"""
+
+import pandas as pd
+
+
+def remove_low_scoring_players(csv_input_path, csv_output_path, score_column='FantasyPoints', min_score=30):
+    # Load the CSV file
+    df = pd.read_csv(csv_input_path)
+
+    # Filter out rows where the score is less than the minimum threshold
+    df_filtered = df[df[score_column] >= min_score]
+
+    # Save the filtered DataFrame to a new CSV file
+    df_filtered.to_csv(csv_output_path, index=False)
+    print(f"Filtered data saved to {csv_output_path}")
+
+
+# Example usage
+input_csv_file = 'Player_2022_cleaned_copy.csv'  # Replace with your input CSV file path
+output_csv_file = 'Player_2022_cleaned_copy.csv'  # Replace with your desired output file name
+
+remove_low_scoring_players(input_csv_file, output_csv_file, score_column='Total_Pts', min_score=30)
