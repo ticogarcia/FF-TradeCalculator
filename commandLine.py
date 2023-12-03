@@ -30,10 +30,23 @@ def find_similar_players(player_data, players):
         if total_pts - 40 <= player_total_pts <= total_pts + 40 and player_prediction > prediction:
             similar_players.append(player)
 
-    # Sort by 'Predictions' in descending order and limit to top 10
-    similar_players_sorted = sorted(similar_players, key=lambda x: float(x['Predictions']), reverse=True)[:10]
+    # Sort by 'Predictions' in descending order
+    similar_players_sorted = sorted(similar_players, key=lambda x: float(x['Predictions']), reverse=True)
 
-    return [player['Name'] for player in similar_players_sorted]
+    # Select top 10 players adhering to the 'POS' constraint
+    top_players = []
+    pos_count = 0
+    for player in similar_players_sorted:
+        if len(top_players) >= 10:
+            break
+        if player['Pos'] == '1.0':
+            if pos_count < 3:
+                top_players.append(player)
+                pos_count += 1
+        else:
+            top_players.append(player)
+
+    return [player['Name'] for player in top_players]
 
 def calculate(player_data, players):
     similar_players = find_similar_players(player_data, players)
